@@ -11,5 +11,7 @@
 
 - Step by Step
 
-1. Login to Github in VSCode
-2. Initialize a new repository in VSCode
+1. Login to Github _in VSCode_
+2. Initialize a new repository and commit _in VSCode_
+3. Create a new repository _on Github_
+4. Push the repository to Github _in VSCode_ (remote name: github)
