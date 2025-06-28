@@ -51,6 +51,7 @@ pnpm dlx shadcn@latest add button badge breadcrumbs card dialog dropdown-menu fo
 ```shell
 # Prisma
 npx prisma init
+npx prisma db push
 # Database
 # https://vercel.com/
 

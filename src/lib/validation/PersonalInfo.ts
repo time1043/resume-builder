@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { imageFile, optionalString } from ".";
+import { imageFile, optionalString } from "./type";
 
 export const personalInfoSchema = z.object({
   photo: imageFile,
