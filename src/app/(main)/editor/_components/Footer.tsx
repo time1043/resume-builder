@@ -9,11 +9,11 @@ interface FooterProps {
 
 export default function Footer({ currentStep, setCurrentStep }: FooterProps) {
   const previousStep = steps.find(
-    (_, index) => steps[index + 1]?.key === currentStep,
+    (_, index) => steps[index + 1]?.key === currentStep
   )?.key;
 
   const nextStep = steps.find(
-    (_, index) => steps[index - 1]?.key === currentStep,
+    (_, index) => steps[index - 1]?.key === currentStep
   )?.key;
 
   return (

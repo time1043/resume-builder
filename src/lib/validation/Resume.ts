@@ -9,5 +9,5 @@ export const resumeSchema = z.object({
 
 export type ResumeValues = Omit<z.infer<typeof resumeSchema>, "photo"> & {
   id?: string;
-  photo?: File | string | null; // file -> url
+  photo?: File | string | null; // file -> string
 };

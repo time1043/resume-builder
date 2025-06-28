@@ -21,7 +21,7 @@ export default function ResumeEditor() {
   }
 
   const FormComponent = steps.find(
-    (step) => step.key === currentStep,
+    (step) => step.key === currentStep
   )?.component;
 
   return (
