@@ -9,12 +9,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { EditorFormProps } from "@/lib/types";
+import { ResumeValues } from "@/lib/validation/Resume";
 import {
   personalInfoSchema,
   PersonalInfoValues,
 } from "@/lib/validation/PersonalInfo";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 export default function PersonalInfoForm({
@@ -34,15 +35,16 @@ export default function PersonalInfoForm({
     },
   });
 
-  useEffect(() => {
-    const { unsubscribe } = form.watch(async (values) => {
-      const isValid = await form.trigger();
-      if (!isValid) return;
-      // Update the resume data
-      setResumeData({ ...resumeData, ...values });
-    });
-    return unsubscribe;
-  }, [form, resumeData, setResumeData]);
+  // 创建优化的更新函数，避免在每个字段中重复创建
+  const updateResumeData = useCallback(
+    (field: keyof PersonalInfoValues, value: any) => {
+      setResumeData((prevData: ResumeValues) => ({
+        ...prevData,
+        [field]: value,
+      }));
+    },
+    [setResumeData]
+  );
 
   const photoInputRef = useRef<HTMLInputElement>(null);
 
@@ -73,6 +75,7 @@ export default function PersonalInfoForm({
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         fieldValues.onChange(file);
+                        updateResumeData("photo", file || null);
                       }}
                       ref={photoInputRef}
                     />
@@ -82,6 +85,7 @@ export default function PersonalInfoForm({
                     type="button"
                     onClick={() => {
                       fieldValues.onChange(null);
+                      updateResumeData("photo", null);
                       if (photoInputRef.current) {
                         photoInputRef.current.value = "";
                       }
@@ -104,7 +108,13 @@ export default function PersonalInfoForm({
                 <FormItem>
                   <FormLabel>First name</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        updateResumeData("firstName", e.target.value);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -117,7 +127,13 @@ export default function PersonalInfoForm({
                 <FormItem>
                   <FormLabel>Last name</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        updateResumeData("lastName", e.target.value);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -133,7 +149,13 @@ export default function PersonalInfoForm({
               <FormItem>
                 <FormLabel>Job title</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      updateResumeData("jobTitle", e.target.value);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -149,7 +171,13 @@ export default function PersonalInfoForm({
                 <FormItem>
                   <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        updateResumeData("city", e.target.value);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -162,7 +190,13 @@ export default function PersonalInfoForm({
                 <FormItem>
                   <FormLabel>Country</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        updateResumeData("country", e.target.value);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -178,7 +212,14 @@ export default function PersonalInfoForm({
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input {...field} type="tel" />
+                  <Input
+                    {...field}
+                    type="tel"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      updateResumeData("phone", e.target.value);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -193,7 +234,14 @@ export default function PersonalInfoForm({
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input {...field} type="email" />
+                  <Input
+                    {...field}
+                    type="email"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      updateResumeData("email", e.target.value);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
