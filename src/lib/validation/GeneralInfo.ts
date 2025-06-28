@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { optionalString } from "./type";
+import { optionalString } from "./base";
 
 export const generalInfoSchema = z.object({
   title: optionalString,
