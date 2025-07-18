@@ -9,13 +9,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { EditorFormProps } from "@/lib/types";
-import { ResumeValues } from "@/lib/validation/Resume";
 import {
   personalInfoSchema,
   PersonalInfoValues,
 } from "@/lib/validation/PersonalInfo";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 export default function PersonalInfoForm({
@@ -35,31 +34,23 @@ export default function PersonalInfoForm({
     },
   });
 
-  // 创建优化的更新函数，避免在每个字段中重复创建
-  const updateResumeData = useCallback(
-    (field: keyof PersonalInfoValues, value: any) => {
-      setResumeData((prevData: ResumeValues) => ({
-        ...prevData,
-        [field]: value,
-      }));
-    },
-    [setResumeData]
-  );
+  useEffect(() => {
+    const { unsubscribe } = form.watch(async (values) => {
+      setResumeData({ ...resumeData, ...values });
+    });
+    return unsubscribe;
+  }, [form, setResumeData]);
 
   const photoInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="mx-auto max-w-xl space-y-6">
-      {/* Title */}
       <div className="space-y-1.5 text-center">
         <h2 className="text-2xl font-semibold">Personal info</h2>
         <p className="text-sm text-muted-foreground">Tell us about yourself.</p>
       </div>
-
-      {/* Form */}
       <Form {...form}>
         <form className="space-y-3">
-          {/* Form: Photo */}
           <FormField
             control={form.control}
             name="photo"
@@ -75,7 +66,6 @@ export default function PersonalInfoForm({
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         fieldValues.onChange(file);
-                        updateResumeData("photo", file || null);
                       }}
                       ref={photoInputRef}
                     />
@@ -85,7 +75,6 @@ export default function PersonalInfoForm({
                     type="button"
                     onClick={() => {
                       fieldValues.onChange(null);
-                      updateResumeData("photo", null);
                       if (photoInputRef.current) {
                         photoInputRef.current.value = "";
                       }
@@ -98,8 +87,6 @@ export default function PersonalInfoForm({
               </FormItem>
             )}
           />
-
-          {/* Field: First Name, Last Name */}
           <div className="grid grid-cols-2 gap-3">
             <FormField
               control={form.control}
@@ -108,13 +95,7 @@ export default function PersonalInfoForm({
                 <FormItem>
                   <FormLabel>First name</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        updateResumeData("firstName", e.target.value);
-                      }}
-                    />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -127,21 +108,13 @@ export default function PersonalInfoForm({
                 <FormItem>
                   <FormLabel>Last name</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        updateResumeData("lastName", e.target.value);
-                      }}
-                    />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-
-          {/* Field: Job Title */}
           <FormField
             control={form.control}
             name="jobTitle"
@@ -149,20 +122,12 @@ export default function PersonalInfoForm({
               <FormItem>
                 <FormLabel>Job title</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      updateResumeData("jobTitle", e.target.value);
-                    }}
-                  />
+                  <Input {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          {/* Field: City, Country */}
           <div className="grid grid-cols-2 gap-3">
             <FormField
               control={form.control}
@@ -171,13 +136,7 @@ export default function PersonalInfoForm({
                 <FormItem>
                   <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        updateResumeData("city", e.target.value);
-                      }}
-                    />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -190,21 +149,13 @@ export default function PersonalInfoForm({
                 <FormItem>
                   <FormLabel>Country</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        updateResumeData("country", e.target.value);
-                      }}
-                    />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-
-          {/* Field: Phone */}
           <FormField
             control={form.control}
             name="phone"
@@ -212,21 +163,12 @@ export default function PersonalInfoForm({
               <FormItem>
                 <FormLabel>Phone</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="tel"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      updateResumeData("phone", e.target.value);
-                    }}
-                  />
+                  <Input {...field} type="tel" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          {/* Field: Email */}
           <FormField
             control={form.control}
             name="email"
@@ -234,14 +176,7 @@ export default function PersonalInfoForm({
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="email"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      updateResumeData("email", e.target.value);
-                    }}
-                  />
+                  <Input {...field} type="email" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

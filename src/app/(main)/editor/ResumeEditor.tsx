@@ -8,10 +8,11 @@ import Footer from "./_components/Footer";
 import { steps } from "./_components/steps";
 
 export default function ResumeEditor() {
+  // form data - all
   const [resumeData, setResumeData] = useState<ResumeValues>({});
 
+  // step
   const searchParams = useSearchParams();
-
   const currentStep = searchParams.get("step") || steps[0].key;
 
   function setStep(key: string) {
@@ -53,7 +54,9 @@ export default function ResumeEditor() {
           <div className="grow md:border-r" />
 
           {/* Right side */}
-          <div className="hidden w-1/2 md:flex">right</div>
+          <div className="hidden w-1/2 md:flex">
+            <pre>{JSON.stringify(resumeData, null, 2)}</pre>
+          </div>
         </div>
       </main>
 

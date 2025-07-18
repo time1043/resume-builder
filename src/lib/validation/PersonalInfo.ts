@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { imageFile, optionalString } from "./base";
+import { imageFile, optionalEmail, optionalString } from "./base";
 
 export const personalInfoSchema = z.object({
   photo: imageFile,
@@ -9,7 +9,7 @@ export const personalInfoSchema = z.object({
   city: optionalString,
   country: optionalString,
   phone: optionalString,
-  email: optionalString,
+  email: optionalEmail,
 });
 
 export type PersonalInfoValues = z.infer<typeof personalInfoSchema>;

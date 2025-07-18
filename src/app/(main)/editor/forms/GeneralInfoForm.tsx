@@ -9,13 +9,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { EditorFormProps } from "@/lib/types";
-import { ResumeValues } from "@/lib/validation/Resume";
 import {
   generalInfoSchema,
   GeneralInfoValues,
 } from "@/lib/validation/GeneralInfo";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export default function GeneralInfoForm({
@@ -30,54 +29,36 @@ export default function GeneralInfoForm({
     },
   });
 
-  // 创建优化的更新函数，避免在每个字段中重复创建
-  const updateResumeData = useCallback(
-    (field: keyof GeneralInfoValues, value: any) => {
-      setResumeData((prevData: ResumeValues) => ({
-        ...prevData,
-        [field]: value,
-      }));
-    },
-    [setResumeData]
-  );
+  useEffect(() => {
+    const { unsubscribe } = form.watch(async (values) => {
+      setResumeData({ ...resumeData, ...values });
+    });
+    return unsubscribe;
+  }, [form, setResumeData]);
 
   return (
     <div className="mx-auto max-w-xl space-y-6">
-      {/* Title */}
       <div className="space-y-1.5 text-center">
         <h2 className="text-2xl font-semibold">General info</h2>
         <p className="text-sm text-muted-foreground">
           This will not appear on your resume.
         </p>
       </div>
-
-      {/* Form */}
       <Form {...form}>
         <form className="space-y-3">
-          {/* Field: Title */}
           <FormField
             control={form.control}
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Title</FormLabel>
+                <FormLabel>Project name</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="My cool resume"
-                    autoFocus
-                    onChange={(e) => {
-                      field.onChange(e);
-                      updateResumeData("title", e.target.value);
-                    }}
-                  />
+                  <Input {...field} placeholder="My cool resume" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          {/* Field: description */}
           <FormField
             control={form.control}
             name="description"
@@ -85,14 +66,7 @@ export default function GeneralInfoForm({
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="A resume for next job"
-                    onChange={(e) => {
-                      field.onChange(e);
-                      updateResumeData("description", e.target.value);
-                    }}
-                  />
+                  <Input {...field} placeholder="A resume for my next job" />
                 </FormControl>
                 <FormDescription>
                   Describe what this resume is for.
